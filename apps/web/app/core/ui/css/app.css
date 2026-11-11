@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+@import '@workspace/ui/globals.css';
+
+@theme {
+  --color-pm-ink: #0e0b09;
+  --color-pm-panel: #15110e;
+  --color-pm-line: #2a231d;
+  --color-pm-red: #8f1b27;
+  --color-pm-gold: #c9a35c;
+  --color-pm-cream: #f1e6d2;
+  --color-pm-muted: #a39787;
+  --color-pm-up: #8fb573;
+  --color-pm-down: #d65a64;
+  --font-display: 'Libre Baskerville', Georgia, serif;
+  --font-body: 'Libre Franklin', system-ui, sans-serif;
+}
