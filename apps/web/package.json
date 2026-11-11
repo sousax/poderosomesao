@@ -23,9 +23,9 @@
     "#common/*": "./app/common/*.js",
     "#auth/*": "./app/auth/*.js",
     "#users/*": "./app/users/*.js",
-    "#marketing/*": "./app/marketing/*.js",
     "#analytics/*": "./app/analytics/*.js",
     "#notifications/*": "./app/notifications/*.js",
+    "#shop/*": "./app/shop/*.js",
     "#providers/*": "./providers/*.js",
     "#tests/*": "./tests/*.js",
     "#generated/*": "./.adonisjs/server/*.js"

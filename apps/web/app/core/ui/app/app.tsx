@@ -13,7 +13,7 @@ import { isSSREnableForPage } from 'config/ssr'
 import { I18nextProvider } from 'react-i18next'
 import { setupI18n } from '../config/i18n.config'
 
-const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS Starter Kit'
+const appName = import.meta.env.VITE_APP_NAME || 'Poderoso Mesão'
 
 createInertiaApp({
   progress: { color: 'black' },

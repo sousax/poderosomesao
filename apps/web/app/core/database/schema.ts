@@ -78,6 +78,35 @@ export class NotificationSchema extends BaseModel {
   declare updatedAt: DateTime | null
 }
 
+export class ProductSchema extends BaseModel {
+  static $columns = ['badge', 'condition', 'createdAt', 'game', 'id', 'kind', 'language', 'name', 'priceCents', 'stock', 'subtitle', 'updatedAt'] as const
+  $columns = ProductSchema.$columns
+  @column()
+  declare badge: string | null
+  @column()
+  declare condition: string | null
+  @column.dateTime({ autoCreate: true })
+  declare createdAt: DateTime
+  @column()
+  declare game: string
+  @column({ isPrimary: true })
+  declare id: number
+  @column()
+  declare kind: string
+  @column()
+  declare language: string | null
+  @column()
+  declare name: string
+  @column()
+  declare priceCents: number
+  @column()
+  declare stock: number
+  @column()
+  declare subtitle: string | null
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  declare updatedAt: DateTime | null
+}
+
 export class RateLimitSchema extends BaseModel {
   static $columns = ['expire', 'key', 'points'] as const
   $columns = RateLimitSchema.$columns

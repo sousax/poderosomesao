@@ -12,11 +12,35 @@ const routes = {
     tokens: [{"old":"/uploads/*","type":0,"val":"uploads","end":""},{"old":"/uploads/*","type":2,"val":"*","end":""}],
     types: placeholder as Registry['drive.fs.serve']['types'],
   },
-  'marketing.show': {
+  'shop.home': {
     methods: ["GET","HEAD"],
     pattern: '/',
     tokens: [{"old":"/","type":0,"val":"/","end":""}],
-    types: placeholder as Registry['marketing.show']['types'],
+    types: placeholder as Registry['shop.home']['types'],
+  },
+  'cart.show': {
+    methods: ["GET","HEAD"],
+    pattern: '/carrinho',
+    tokens: [{"old":"/carrinho","type":0,"val":"carrinho","end":""}],
+    types: placeholder as Registry['cart.show']['types'],
+  },
+  'cart.store': {
+    methods: ["POST"],
+    pattern: '/carrinho/itens',
+    tokens: [{"old":"/carrinho/itens","type":0,"val":"carrinho","end":""},{"old":"/carrinho/itens","type":0,"val":"itens","end":""}],
+    types: placeholder as Registry['cart.store']['types'],
+  },
+  'cart.update': {
+    methods: ["PUT"],
+    pattern: '/carrinho/itens/:productId',
+    tokens: [{"old":"/carrinho/itens/:productId","type":0,"val":"carrinho","end":""},{"old":"/carrinho/itens/:productId","type":0,"val":"itens","end":""},{"old":"/carrinho/itens/:productId","type":1,"val":"productId","end":""}],
+    types: placeholder as Registry['cart.update']['types'],
+  },
+  'cart.destroy': {
+    methods: ["DELETE"],
+    pattern: '/carrinho/itens/:productId',
+    tokens: [{"old":"/carrinho/itens/:productId","type":0,"val":"carrinho","end":""},{"old":"/carrinho/itens/:productId","type":0,"val":"itens","end":""},{"old":"/carrinho/itens/:productId","type":1,"val":"productId","end":""}],
+    types: placeholder as Registry['cart.destroy']['types'],
   },
   'auth.sign_in.show': {
     methods: ["GET","HEAD"],

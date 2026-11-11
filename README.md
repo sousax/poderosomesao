@@ -9,11 +9,13 @@ Loja virtual de card games: cartas avulsas, produtos lacrados e acessórios de M
 O projeto está no começo. Hoje existe:
 
 - **Landing page** (`/`) no visual "versão escura" da marca, com a estrutura de loja inspirada na LigaMagic: busca por carta com seletor de jogo, categorias, lançamentos, edições, cotações (cartas em alta, em queda e mais vistas), estoque de avulsas, vitrine de lacrados, compra por lista e venda de coleção.
+- **Carrinho** (`/carrinho`) funcionando de verdade: os produtos vêm do banco, o carrinho fica na sessão (funciona sem login), respeita o estoque e mostra o total.
 - **Base do starter kit**: login, cadastro, usuários, permissões, notificações e i18n, já funcionando.
 
 Ainda falta:
 
-- Busca, carrinho, checkout, compra por lista e newsletter só existem na tela e não têm backend.
+- Busca, checkout, compra por lista e newsletter só existem na tela e não têm backend.
+- O catálogo vem de um seeder com preços de exemplo, e ainda não há painel para cadastrar produtos.
 - Os textos entre colchetes (`[R$]`, `[EDIÇÃO]`, `[TELEFONE]`, `[CNPJ]`…) precisam ser trocados pelos dados reais.
 
 ## Stack
@@ -36,13 +38,15 @@ cp apps/web/.env.example apps/web/.env
 pnpm ace generate:key
 pnpm infra:up            # Postgres + Mailpit + pgAdmin
 pnpm ace migration:run
-pnpm ace db:seed
+pnpm ace db:seed         # usuário admin + catálogo de exemplo
 pnpm dev
 ```
 
 O app sobe em `http://localhost:3333`. Se a porta estiver ocupada, o Adonis escolhe outra e mostra o endereço no terminal.
 
 Para derrubar a infra: `pnpm infra:down`.
+
+Se as portas padrão já estiverem em uso por outro projeto, mude `DB_PORT`, `SMTP_PORT`, `MAILPIT_UI_PORT` e `PGADMIN_PORT` no `apps/web/.env`. O `docker-compose` lê essas variáveis.
 
 ## Comandos
 
@@ -60,9 +64,11 @@ Antes de abrir um PR, rode `pnpm typecheck && pnpm lint`.
 
 ```
 apps/web/                 app AdonisJS + Inertia
-  app/<módulo>/           cada contexto é um módulo: auth, users, marketing, …
+  app/<módulo>/           cada contexto é um módulo: auth, users, shop, …
     controllers/ actions/ validators/ ui/ routes.ts tests/
-  app/marketing/ui/pages/show.tsx   landing da loja
+  app/shop/                         vitrine, produtos e carrinho
+  app/shop/ui/pages/home.tsx        vitrine (página inicial)
+  app/shop/services/cart.ts         regras do carrinho
   app/core/ui/css/app.css           cores (pm-*) e fontes da marca
 packages/ui/              componentes base (shadcn/Radix)
 packages/skills/          skills para agentes de código

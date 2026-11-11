@@ -19,7 +19,7 @@ export interface Registry {
       errorResponse: unknown
     }
   }
-  'marketing.show': {
+  'shop.home': {
     methods: ["GET","HEAD"]
     pattern: '/'
     types: {
@@ -27,8 +27,56 @@ export interface Registry {
       paramsTuple: []
       params: {}
       query: {}
-      response: ExtractResponse<Awaited<ReturnType<import('#app/marketing/controllers/marketing_controller').default['handle']>>>
-      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/marketing/controllers/marketing_controller').default['handle']>>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/shop/controllers/shop_controller').default['home']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/shop/controllers/shop_controller').default['home']>>>
+    }
+  }
+  'cart.show': {
+    methods: ["GET","HEAD"]
+    pattern: '/carrinho'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/shop/controllers/cart_controller').default['show']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/shop/controllers/cart_controller').default['show']>>>
+    }
+  }
+  'cart.store': {
+    methods: ["POST"]
+    pattern: '/carrinho/itens'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#shop/validators/cart').addToCartValidator)>>
+      paramsTuple: []
+      params: {}
+      query: ExtractQuery<InferInput<(typeof import('#shop/validators/cart').addToCartValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/shop/controllers/cart_controller').default['store']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/shop/controllers/cart_controller').default['store']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'cart.update': {
+    methods: ["PUT"]
+    pattern: '/carrinho/itens/:productId'
+    types: {
+      body: ExtractBody<InferInput<(typeof import('#shop/validators/cart').updateCartItemValidator)>>
+      paramsTuple: [ParamValue]
+      params: { productId: ParamValue }
+      query: ExtractQuery<InferInput<(typeof import('#shop/validators/cart').updateCartItemValidator)>>
+      response: ExtractResponse<Awaited<ReturnType<import('#app/shop/controllers/cart_controller').default['update']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/shop/controllers/cart_controller').default['update']>>> | { status: 422; response: { errors: SimpleError[] } }
+    }
+  }
+  'cart.destroy': {
+    methods: ["DELETE"]
+    pattern: '/carrinho/itens/:productId'
+    types: {
+      body: {}
+      paramsTuple: [ParamValue]
+      params: { productId: ParamValue }
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#app/shop/controllers/cart_controller').default['destroy']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#app/shop/controllers/cart_controller').default['destroy']>>>
     }
   }
   'auth.sign_in.show': {

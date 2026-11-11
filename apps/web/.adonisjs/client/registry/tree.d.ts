@@ -7,8 +7,14 @@ export interface ApiDefinition {
       serve: typeof routes['drive.fs.serve']
     }
   }
-  marketing: {
-    show: typeof routes['marketing.show']
+  shop: {
+    home: typeof routes['shop.home']
+  }
+  cart: {
+    show: typeof routes['cart.show']
+    store: typeof routes['cart.store']
+    update: typeof routes['cart.update']
+    destroy: typeof routes['cart.destroy']
   }
   auth: {
     signIn: {

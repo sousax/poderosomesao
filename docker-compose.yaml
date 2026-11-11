@@ -1,4 +1,4 @@
-name: adonisjs-starter-kit
+name: poderosomesao
 
 include:
   - ./apps/web/docker-compose.yaml

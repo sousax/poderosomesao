@@ -6,7 +6,7 @@ import { UserFactory } from '#users/database/factories/user'
 test.group('Endpoint /logout', (group) => {
   group.each.setup(() => testUtils.db().wrapInGlobalTransaction())
 
-  test('desloga, limpa sessao e redireciona para marketing.show', async ({ client, assert }) => {
+  test('desloga, limpa sessao e redireciona para shop.home', async ({ client, assert }) => {
     const user = await UserFactory.create()
 
     const response = await client.post('/logout').redirects(0).loginAs(user).withCsrfToken()

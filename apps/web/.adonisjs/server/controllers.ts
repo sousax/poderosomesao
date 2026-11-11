@@ -15,11 +15,12 @@ export const controllers = {
     SignUp: () => import('#app/auth/controllers/sign_up_controller'),
     Social: () => import('#app/auth/controllers/social_controller'),
   },
-  marketing: {
-    Marketing: () => import('#app/marketing/controllers/marketing_controller'),
-  },
   notifications: {
     Notifications: () => import('#app/notifications/controllers/notifications_controller'),
+  },
+  shop: {
+    Cart: () => import('#app/shop/controllers/cart_controller'),
+    Shop: () => import('#app/shop/controllers/shop_controller'),
   },
   users: {
     Impersonates: () => import('#app/users/controllers/impersonates_controller'),

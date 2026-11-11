@@ -5,7 +5,11 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
-    'marketing.show': { paramsTuple?: []; params?: {} }
+    'shop.home': { paramsTuple?: []; params?: {} }
+    'cart.show': { paramsTuple?: []; params?: {} }
+    'cart.store': { paramsTuple?: []; params?: {} }
+    'cart.update': { paramsTuple: [ParamValue]; params: {'productId': ParamValue} }
+    'cart.destroy': { paramsTuple: [ParamValue]; params: {'productId': ParamValue} }
     'auth.sign_in.show': { paramsTuple?: []; params?: {} }
     'auth.sign_in.handle': { paramsTuple?: []; params?: {} }
     'auth.sign_out.handle': { paramsTuple?: []; params?: {} }
@@ -40,7 +44,8 @@ export type ScannedRoutes = {
   }
   GET: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
-    'marketing.show': { paramsTuple?: []; params?: {} }
+    'shop.home': { paramsTuple?: []; params?: {} }
+    'cart.show': { paramsTuple?: []; params?: {} }
     'auth.sign_in.show': { paramsTuple?: []; params?: {} }
     'auth.sign_up.show': { paramsTuple?: []; params?: {} }
     'auth.forgot_password.show': { paramsTuple?: []; params?: {} }
@@ -57,7 +62,8 @@ export type ScannedRoutes = {
   }
   HEAD: {
     'drive.fs.serve': { paramsTuple: [...ParamValue[]]; params: {'*': ParamValue[]} }
-    'marketing.show': { paramsTuple?: []; params?: {} }
+    'shop.home': { paramsTuple?: []; params?: {} }
+    'cart.show': { paramsTuple?: []; params?: {} }
     'auth.sign_in.show': { paramsTuple?: []; params?: {} }
     'auth.sign_up.show': { paramsTuple?: []; params?: {} }
     'auth.forgot_password.show': { paramsTuple?: []; params?: {} }
@@ -73,6 +79,7 @@ export type ScannedRoutes = {
     'notifications.index': { paramsTuple?: []; params?: {} }
   }
   POST: {
+    'cart.store': { paramsTuple?: []; params?: {} }
     'auth.sign_in.handle': { paramsTuple?: []; params?: {} }
     'auth.sign_out.handle': { paramsTuple?: []; params?: {} }
     'auth.sign_up.handle': { paramsTuple?: []; params?: {} }
@@ -88,16 +95,18 @@ export type ScannedRoutes = {
     'notifications.markAllRead': { paramsTuple?: []; params?: {} }
   }
   PUT: {
+    'cart.update': { paramsTuple: [ParamValue]; params: {'productId': ParamValue} }
     'users.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'profile.update': { paramsTuple?: []; params?: {} }
     'password.update': { paramsTuple?: []; params?: {} }
   }
-  PATCH: {
-    'users.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
-  }
   DELETE: {
+    'cart.destroy': { paramsTuple: [ParamValue]; params: {'productId': ParamValue} }
     'users.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
     'tokens.destroy': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
+  }
+  PATCH: {
+    'users.update': { paramsTuple: [ParamValue]; params: {'id': ParamValue} }
   }
 }
 declare module '@adonisjs/core/types/http' {

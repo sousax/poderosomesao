@@ -1,7 +1,31 @@
-import { Link } from '@adonisjs/inertia/react'
+import { router } from '@inertiajs/react'
 import { useState } from 'react'
 
-const GAMES = ['Magic: The Gathering', 'Pokémon TCG', 'Yu-Gi-Oh!', 'One Piece', 'Lorcana']
+import { urlFor } from '~/app/client'
+
+import StoreLayout, {
+  btnOutline,
+  btnRed,
+  btnSmall,
+  eyebrow,
+  formatPrice,
+  GAMES,
+  goldLink,
+  input,
+  Rose,
+} from '#shop/ui/components/store_layout'
+
+import type { InertiaProps } from '#core/ui/types'
+import type { Data } from '@generated/data'
+
+type Product = Data.Shop.Product
+
+type PageProps = InertiaProps<{
+  singles: Product[]
+  showcase: Product[]
+  cartCount: number
+}>
+
 const MOST_SEARCHED = [
   'Sol Ring',
   'Charizard ex',
@@ -10,22 +34,18 @@ const MOST_SEARCHED = [
   'The One Ring',
 ]
 
-const CATEGORIES = [
-  { label: 'Cartas avulsas', href: '#estoque' },
-  { label: 'Lacrados', href: '#lancamentos' },
-  { label: 'Pré-vendas', href: '#vitrine' },
-  { label: 'Acessórios', href: '#vitrine' },
-  { label: 'Edições', href: '#edicoes' },
-  { label: 'Cartas em alta', href: '#cotacoes' },
-  { label: 'Compra por lista', href: '#lista' },
-  { label: 'Vender coleção', href: '#lista' },
-]
-
 const LAUNCHES = [
   { game: 'Magic: The Gathering', name: '[COLEÇÃO MAIS RECENTE]' },
   { game: 'Pokémon TCG', name: '[COLEÇÃO MAIS RECENTE]' },
 ]
-const SEALED = ['Boosters', 'Displays', 'Bundles', 'Decks de Commander', 'Elite Trainer Box', 'Structure Decks']
+const SEALED = [
+  'Boosters',
+  'Displays',
+  'Bundles',
+  'Decks de Commander',
+  'Elite Trainer Box',
+  'Structure Decks',
+]
 
 const EDITIONS = [
   { game: 'Magic', name: '[EDIÇÃO]' },
@@ -41,72 +61,56 @@ const MOVERS = [
   {
     title: 'Cartas em alta',
     tone: 'up',
-    cards: ['Sol Ring', 'Charizard ex', 'Monkey D. Luffy', 'Rhystic Study', 'Ash Blossom & Joyous Spring'],
+    cards: [
+      'Sol Ring',
+      'Charizard ex',
+      'Monkey D. Luffy',
+      'Rhystic Study',
+      'Ash Blossom & Joyous Spring',
+    ],
   },
   {
     title: 'Cartas em queda',
     tone: 'down',
-    cards: ['The One Ring', 'Pikachu ex', 'Nibiru, the Primal Being', 'Roronoa Zoro', 'Orcish Bowmasters'],
+    cards: [
+      'The One Ring',
+      'Pikachu ex',
+      'Nibiru, the Primal Being',
+      'Roronoa Zoro',
+      'Orcish Bowmasters',
+    ],
   },
   {
     title: 'Mais vistas',
     tone: 'views',
-    cards: ['Mana Crypt', 'Umbreon VMAX', 'Snake-Eye Ash', 'Portgas D. Ace', 'Elsa, Spirit of Winter'],
+    cards: [
+      'Mana Crypt',
+      'Umbreon VMAX',
+      'Snake-Eye Ash',
+      'Portgas D. Ace',
+      'Elsa, Spirit of Winter',
+    ],
   },
 ] as const
 
-const STOCK = [
-  { name: 'Sol Ring', pt: 'Anel Solar', game: 'Magic: The Gathering', tag: 'Magic', lang: 'EN', condition: 'NM', qty: 30 },
-  { name: 'Charizard ex', game: 'Pokémon TCG', tag: 'Pokémon', lang: 'PT', condition: 'NM', qty: 4 },
-  { name: 'Ash Blossom & Joyous Spring', game: 'Yu-Gi-Oh!', tag: 'Yu-Gi-Oh!', lang: 'EN', condition: 'SP', qty: 12 },
-  { name: 'Monkey D. Luffy', game: 'One Piece Card Game', tag: 'One Piece', lang: 'JP', condition: 'NM', qty: 2 },
-  { name: 'The One Ring', pt: 'O Um Anel', game: 'Magic: The Gathering', tag: 'Magic', lang: 'PT', condition: 'MP', qty: 1 },
-]
-const STOCK_FILTERS = ['Todos', 'Magic', 'Pokémon', 'Yu-Gi-Oh!', 'One Piece']
-
-const SHOWCASE = [
-  { badge: 'Lançamento', game: 'Magic: The Gathering', name: 'Display de boosters — [COLEÇÃO]' },
-  { badge: 'Pré-venda', game: 'Pokémon TCG', name: 'Elite Trainer Box — [COLEÇÃO]' },
-  { badge: 'Destaque', game: 'Yu-Gi-Oh!', name: 'Structure Deck — [NOME]' },
-  { badge: 'Exclusivo', game: 'Acessórios', name: 'Playmat Poderoso Mesão — edição da casa' },
-]
-
 const GUARANTEES = [
-  { title: 'Condição conferida', text: 'Cada carta avulsa é avaliada uma a uma. O estado anunciado é o estado que chega.' },
-  { title: 'Envio protegido', text: 'Sleeve, top loader e caixa rígida. Rastreio para todo o Brasil.' },
-  { title: 'Pix e cartão', text: 'Desconto no Pix e parcelamento no cartão. Negócios limpos, sempre.' },
-  { title: 'Troca garantida', text: 'Chegou diferente do anunciado? A família resolve. Palavra de honra.' },
+  {
+    title: 'Condição conferida',
+    text: 'Cada carta avulsa é avaliada uma a uma. O estado anunciado é o estado que chega.',
+  },
+  {
+    title: 'Envio protegido',
+    text: 'Sleeve, top loader e caixa rígida. Rastreio para todo o Brasil.',
+  },
+  {
+    title: 'Pix e cartão',
+    text: 'Desconto no Pix e parcelamento no cartão. Negócios limpos, sempre.',
+  },
+  {
+    title: 'Troca garantida',
+    text: 'Chegou diferente do anunciado? A família resolve. Palavra de honra.',
+  },
 ]
-
-const eyebrow = 'text-[11px] uppercase tracking-[0.2em] text-pm-gold'
-const btnRed =
-  'inline-block bg-pm-red px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-pm-cream transition-colors hover:bg-[#a52231]'
-const btnOutline =
-  'inline-block border border-pm-gold/60 px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-pm-cream transition-colors hover:border-pm-gold'
-const btnSmall =
-  'border border-pm-gold/60 px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.15em] transition-colors hover:border-pm-gold hover:bg-pm-gold/10'
-const goldLink = 'text-[11px] font-semibold uppercase tracking-[0.15em] text-pm-gold underline underline-offset-4'
-const input =
-  'w-full border border-pm-gold/40 bg-pm-ink px-3 py-2.5 text-sm text-pm-cream outline-none placeholder:text-pm-muted/60 focus:border-pm-gold'
-
-function Rose({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className={className}>
-      <path d="M12 3c3 0 5 2 5 4.5S15 12 12 12s-4-1.5-4-3.5S10 5 12 6.5 13.5 9 12 9.5" />
-      <path d="M12 12v9M12 16c-2 0-3.5-1-4-2.5M12 18c2 0 3.5-1 4-2.5" />
-    </svg>
-  )
-}
-
-function CartIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" className={className}>
-      <path d="M3 4h2l2.4 11h10.8L21 7H6.2" />
-      <circle cx="9" cy="19" r="1.3" />
-      <circle cx="17" cy="19" r="1.3" />
-    </svg>
-  )
-}
 
 function SectionHead({ kicker, title, more }: { kicker: string; title: string; more?: string }) {
   return (
@@ -124,7 +128,15 @@ function SectionHead({ kicker, title, more }: { kicker: string; title: string; m
   )
 }
 
-function Tabs({ options, value, onChange }: { options: readonly string[]; value: string; onChange: (v: string) => void }) {
+function Tabs({
+  options,
+  value,
+  onChange,
+}: {
+  options: readonly string[]
+  value: string
+  onChange: (v: string) => void
+}) {
   return (
     <div className="flex flex-wrap gap-2">
       {options.map((o) => (
@@ -159,7 +171,10 @@ function Movers({ title, tone, cards }: (typeof MOVERS)[number]) {
               key={p}
               type="button"
               onClick={() => setPeriod(p)}
-              className={'px-2 py-1 ' + (period === p ? 'bg-pm-gold/15 text-pm-gold' : 'text-pm-muted hover:text-pm-cream')}
+              className={
+                'px-2 py-1 ' +
+                (period === p ? 'bg-pm-gold/15 text-pm-gold' : 'text-pm-muted hover:text-pm-cream')
+              }
             >
               {p}
             </button>
@@ -168,7 +183,10 @@ function Movers({ title, tone, cards }: (typeof MOVERS)[number]) {
       </div>
       <ol>
         {cards.map((card) => (
-          <li key={card} className="flex items-center gap-3 border-b border-pm-line/60 px-4 py-2.5 text-sm last:border-0">
+          <li
+            key={card}
+            className="flex items-center gap-3 border-b border-pm-line/60 px-4 py-2.5 text-sm last:border-0"
+          >
             <span className={'w-20 shrink-0 text-[11px] ' + color}>{sign}</span>
             <a href="#estoque" className="flex-1 truncate hover:text-pm-gold">
               {card}
@@ -181,85 +199,64 @@ function Movers({ title, tone, cards }: (typeof MOVERS)[number]) {
   )
 }
 
-export default function Page() {
-  const [cart, setCart] = useState(0)
-  const [filter, setFilter] = useState('Todos')
-  const stock = filter === 'Todos' ? STOCK : STOCK.filter((c) => c.tag === filter)
-  const addToCart = () => setCart((n) => n + 1)
+function addToCart(productId: number, quantity: number) {
+  router.post(urlFor('cart.store'), { productId, quantity }, { preserveScroll: true })
+}
+
+function StockRow({ product }: { product: Product }) {
+  const [quantity, setQuantity] = useState(1)
 
   return (
-    <div className="min-h-screen bg-pm-ink font-body text-pm-cream antialiased">
-      <div className="bg-pm-red px-4 py-2 text-center text-[10px] uppercase tracking-[0.2em] sm:text-[11px]">
-        Envio para todo o Brasil
-        <span className="hidden sm:inline"> · [X]% off no Pix · Parcele em até [N]x no cartão</span>
+    <li className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-3 border border-pm-line bg-pm-ink p-4 md:grid-cols-[auto_1fr_7rem_5rem_9rem_auto]">
+      <span className="row-span-2 h-16 w-12 rounded-sm border border-pm-line bg-pm-panel md:row-span-1" />
+      <div className="min-w-0">
+        <p className="font-display text-lg leading-tight">{product.name}</p>
+        <p className="text-[11px] text-pm-muted">
+          {product.subtitle ? product.subtitle + ' · ' : ''}
+          {product.game}
+        </p>
       </div>
+      <div className="col-start-2 flex flex-wrap items-center gap-3 md:contents">
+        <span className="text-lg text-pm-gold md:text-right">
+          {formatPrice(product.priceCents)}
+        </span>
+        <span className="flex gap-1.5 text-[10px] md:justify-center">
+          <span className="border border-pm-muted/50 px-1.5 py-0.5">{product.language}</span>
+          <span className="border border-pm-muted/50 px-1.5 py-0.5">{product.condition}</span>
+        </span>
+        <label className="flex items-center gap-2 text-xs text-pm-muted">
+          <input
+            type="number"
+            min={1}
+            max={product.stock}
+            value={quantity}
+            onChange={(e) =>
+              setQuantity(Math.max(1, Math.min(product.stock, Number(e.target.value) || 1)))
+            }
+            aria-label={`Quantidade de ${product.name}`}
+            className="w-14 border border-pm-line bg-pm-panel px-2 py-1.5 text-center text-pm-cream outline-none focus:border-pm-gold"
+          />
+          de {product.stock}
+        </label>
+        <button
+          type="button"
+          onClick={() => addToCart(product.id, quantity)}
+          className={btnSmall + ' ml-auto md:ml-0'}
+        >
+          Comprar
+        </button>
+      </div>
+    </li>
+  )
+}
 
-      <header className="sticky top-0 z-30 border-b border-pm-line bg-pm-ink/95 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-4 md:px-8">
-          <a href="/" className="flex items-center gap-3">
-            <span className="flex size-9 items-center justify-center rounded-full border border-pm-gold text-pm-gold">
-              <Rose className="size-5" />
-            </span>
-            <span>
-              <span className="block font-display text-lg font-bold tracking-wide">PODEROSO MESÃO</span>
-              <span className="block text-[9px] uppercase tracking-[0.25em] text-pm-gold">TCG · Avulsas · Lacrados</span>
-            </span>
-          </a>
+export default function Page({ singles, showcase, cartCount }: PageProps) {
+  const [filter, setFilter] = useState('Todos')
+  const filters = ['Todos', ...new Set(singles.map((p) => p.game))]
+  const stock = filter === 'Todos' ? singles : singles.filter((p) => p.game === filter)
 
-          <form
-            className="order-last flex w-full md:order-none md:flex-1"
-            role="search"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <select
-              aria-label="Jogo"
-              className="w-28 shrink-0 border border-r-0 border-pm-gold/40 bg-pm-panel px-2 text-xs sm:w-auto text-pm-cream outline-none focus:border-pm-gold"
-            >
-              <option>Todos os jogos</option>
-              {GAMES.map((g) => (
-                <option key={g}>{g}</option>
-              ))}
-            </select>
-            <input
-              type="search"
-              aria-label="Buscar carta ou produto"
-              placeholder="Qual carta a família procura?"
-              className={input + ' min-w-0'}
-            />
-            <button type="submit" className="bg-pm-red px-5 text-[11px] font-semibold uppercase tracking-[0.15em] hover:bg-[#a52231]">
-              Buscar
-            </button>
-          </form>
-
-          <div className="ml-auto flex items-center gap-5 md:ml-0">
-            <Link route="auth.sign_in.show" className="text-right text-[11px] leading-tight">
-              <span className="block text-pm-muted">Faça parte</span>
-              <span className="block font-semibold uppercase tracking-[0.1em] text-pm-gold">Entrar</span>
-            </Link>
-            <a href="#carrinho" className="relative" aria-label={`Carrinho, ${cart} itens`}>
-              <CartIcon className="size-7 text-pm-gold" />
-              {cart > 0 && (
-                <span className="absolute -right-2 -top-1.5 flex size-5 items-center justify-center rounded-full bg-pm-red text-[10px] font-semibold">
-                  {cart}
-                </span>
-              )}
-            </a>
-          </div>
-        </div>
-
-        <nav className="border-t border-pm-line bg-pm-panel">
-          <ul className="mx-auto flex max-w-6xl gap-6 overflow-x-auto px-4 py-2.5 md:px-8 lg:justify-between">
-            {CATEGORIES.map((c) => (
-              <li key={c.label} className="shrink-0">
-                <a href={c.href} className="text-[11px] uppercase tracking-[0.15em] text-pm-gold hover:text-pm-cream">
-                  {c.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </header>
-
+  return (
+    <StoreLayout cartCount={cartCount}>
       <div className="border-b border-pm-line">
         <p className="mx-auto flex max-w-6xl flex-wrap gap-x-3 gap-y-1 px-4 py-3 text-xs text-pm-muted md:px-8">
           Mais buscadas:
@@ -281,8 +278,8 @@ export default function Page() {
               Uma oferta que você <em className="text-pm-gold">não pode</em> recusar.
             </h1>
             <p className="mt-6 max-w-md text-pm-muted">
-              Cartas avulsas, boosters lacrados e acessórios dos maiores TCGs, com estado conferido carta por carta e
-              entrega para todo o Brasil.
+              Cartas avulsas, boosters lacrados e acessórios dos maiores TCGs, com estado conferido
+              carta por carta e entrega para todo o Brasil.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="#estoque" className={btnRed}>
@@ -309,7 +306,9 @@ export default function Page() {
               <div className="flex h-full flex-col items-center justify-center rounded border border-pm-gold/50">
                 <Rose className="size-8 text-pm-gold" />
                 <span className="mt-4 font-display text-2xl tracking-widest">PM</span>
-                <span className="mt-3 text-[9px] uppercase tracking-[0.3em] text-pm-cream/80">La Famiglia</span>
+                <span className="mt-3 text-[9px] uppercase tracking-[0.3em] text-pm-cream/80">
+                  La Famiglia
+                </span>
               </div>
             </div>
           </div>
@@ -330,7 +329,11 @@ export default function Page() {
       </div>
 
       <section id="lancamentos" className="mx-auto max-w-6xl px-4 py-20 md:px-8">
-        <SectionHead kicker="Capítulo I" title="Os lançamentos da família" more="Todos os lacrados" />
+        <SectionHead
+          kicker="Capítulo I"
+          title="Os lançamentos da família"
+          more="Todos os lacrados"
+        />
         <div className="mt-10 grid gap-4 md:grid-cols-2">
           {LAUNCHES.map((l) => (
             <a
@@ -384,7 +387,11 @@ export default function Page() {
       </section>
 
       <section id="cotacoes" className="mx-auto max-w-6xl px-4 py-20 md:px-8">
-        <SectionHead kicker="O livro-caixa" title="O mercado da semana" more="Ver todas as cotações" />
+        <SectionHead
+          kicker="O livro-caixa"
+          title="O mercado da semana"
+          more="Ver todas as cotações"
+        />
         <div className="mt-10 grid gap-4 lg:grid-cols-3">
           {MOVERS.map((m) => (
             <Movers key={m.title} {...m} />
@@ -396,49 +403,17 @@ export default function Page() {
         <div className="mx-auto max-w-6xl px-4 py-20 md:px-8">
           <SectionHead kicker="Capítulo II" title="Cartas avulsas em estoque" />
           <div className="mt-6">
-            <Tabs options={STOCK_FILTERS} value={filter} onChange={setFilter} />
+            <Tabs options={filters} value={filter} onChange={setFilter} />
           </div>
 
           <ul className="mt-6 space-y-2">
-            {stock.map((c) => (
-              <li
-                key={c.name}
-                className="grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-3 border border-pm-line bg-pm-ink p-4 md:grid-cols-[auto_1fr_6rem_5rem_9rem_auto]"
-              >
-                <span className="row-span-2 h-16 w-12 rounded-sm border border-pm-line bg-pm-panel md:row-span-1" />
-                <div className="min-w-0">
-                  <p className="font-display text-lg leading-tight">{c.name}</p>
-                  <p className="text-[11px] text-pm-muted">
-                    {c.pt ? c.pt + ' · ' : ''}
-                    {c.game} · [EDIÇÃO] #[Nº]
-                  </p>
-                </div>
-                <div className="col-start-2 flex flex-wrap items-center gap-3 md:contents">
-                  <span className="text-lg text-pm-gold md:text-right">[R$]</span>
-                  <span className="flex gap-1.5 text-[10px] md:justify-center">
-                    <span className="border border-pm-muted/50 px-1.5 py-0.5">{c.lang}</span>
-                    <span className="border border-pm-muted/50 px-1.5 py-0.5">{c.condition}</span>
-                  </span>
-                  <label className="flex items-center gap-2 text-xs text-pm-muted">
-                    <input
-                      type="number"
-                      min={1}
-                      max={c.qty}
-                      defaultValue={1}
-                      aria-label={`Quantidade de ${c.name}`}
-                      className="w-14 border border-pm-line bg-pm-panel px-2 py-1.5 text-center text-pm-cream outline-none focus:border-pm-gold"
-                    />
-                    de {c.qty}
-                  </label>
-                  <button type="button" onClick={addToCart} className={btnSmall + ' ml-auto md:ml-0'}>
-                    Comprar
-                  </button>
-                </div>
-              </li>
+            {stock.map((product) => (
+              <StockRow key={product.id} product={product} />
             ))}
           </ul>
           <p className="mt-4 text-[11px] text-pm-muted">
-            Condição: NM (praticamente nova), SP (usada levemente), MP (usada moderadamente). Idioma: PT, EN, JP.
+            Condição: NM (praticamente nova), SP (usada levemente), MP (usada moderadamente).
+            Idioma: PT, EN, JP.
           </p>
         </div>
       </section>
@@ -446,12 +421,14 @@ export default function Page() {
       <section id="vitrine" className="mx-auto max-w-6xl px-4 py-20 md:px-8">
         <SectionHead kicker="Capítulo III" title="A vitrine do Don" more="Ver todo o acervo" />
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {SHOWCASE.map((p) => (
-            <article key={p.name} className="flex flex-col border border-pm-line bg-pm-panel">
+          {showcase.map((p) => (
+            <article key={p.id} className="flex flex-col border border-pm-line bg-pm-panel">
               <div className="relative flex h-44 items-center justify-center bg-[#1b1514] text-[10px] uppercase tracking-[0.2em] text-pm-muted/70">
-                <span className="absolute left-2 top-2 bg-pm-red px-2 py-1 text-[9px] tracking-[0.15em] text-pm-cream">
-                  {p.badge}
-                </span>
+                {p.badge && (
+                  <span className="absolute left-2 top-2 bg-pm-red px-2 py-1 text-[9px] tracking-[0.15em] text-pm-cream">
+                    {p.badge}
+                  </span>
+                )}
                 [Foto do produto]
               </div>
               <div className="flex flex-1 flex-col p-4">
@@ -459,10 +436,9 @@ export default function Page() {
                 <h3 className="mt-1 font-display text-lg leading-snug">{p.name}</h3>
                 <div className="mt-auto flex items-end justify-between gap-3 pt-6">
                   <div>
-                    <p className="text-[10px] text-pm-muted">A partir de</p>
-                    <p className="font-display text-lg">[PREÇO]</p>
+                    <p className="font-display text-lg">{formatPrice(p.priceCents)}</p>
                   </div>
-                  <button type="button" onClick={addToCart} className={btnSmall}>
+                  <button type="button" onClick={() => addToCart(p.id, 1)} className={btnSmall}>
                     Adicionar
                   </button>
                 </div>
@@ -481,15 +457,24 @@ export default function Page() {
         <blockquote className="mx-auto max-w-3xl font-display text-3xl italic leading-snug md:text-4xl">
           “Mantenha seus amigos perto. E seus decks, mais perto ainda.”
         </blockquote>
-        <p className="mt-4 text-[10px] uppercase tracking-[0.25em] text-pm-gold">— Ditado da casa</p>
+        <p className="mt-4 text-[10px] uppercase tracking-[0.25em] text-pm-gold">
+          — Ditado da casa
+        </p>
       </section>
 
-      <section id="lista" className="mx-auto grid max-w-6xl gap-4 px-4 py-20 md:grid-cols-2 md:px-8">
-        <form className="border border-pm-line bg-pm-panel p-8" onSubmit={(e) => e.preventDefault()}>
+      <section
+        id="lista"
+        className="mx-auto grid max-w-6xl gap-4 px-4 py-20 md:grid-cols-2 md:px-8"
+      >
+        <form
+          className="border border-pm-line bg-pm-panel p-8"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <p className={eyebrow}>Capítulo IV</p>
           <h2 className="mt-3 font-display text-3xl">Compra por lista</h2>
           <p className="mt-3 text-sm text-pm-muted">
-            Cole a lista do seu deck, uma carta por linha. A família separa tudo o que tem em estoque.
+            Cole a lista do seu deck, uma carta por linha. A família separa tudo o que tem em
+            estoque.
           </p>
           <textarea
             rows={6}
@@ -506,8 +491,8 @@ export default function Page() {
           <p className={eyebrow}>Capítulo V</p>
           <h2 className="mt-3 font-display text-3xl">Compramos sua coleção</h2>
           <p className="mt-3 text-sm leading-relaxed text-pm-muted">
-            Tem cartas paradas na pasta? Faça uma proposta ao nosso consigliere. Pagamos em dinheiro ou em crédito na
-            loja, com bônus para quem fica na família.
+            Tem cartas paradas na pasta? Faça uma proposta ao nosso consigliere. Pagamos em dinheiro
+            ou em crédito na loja, com bônus para quem fica na família.
           </p>
           <ul className="mt-6 space-y-2 text-sm">
             <li>✦ Avaliação carta por carta</li>
@@ -532,7 +517,9 @@ export default function Page() {
           <div className="mt-12 grid gap-px border border-pm-line bg-pm-line sm:grid-cols-2 lg:grid-cols-4">
             {GUARANTEES.map((g, i) => (
               <div key={g.title} className="bg-pm-ink p-6">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-pm-gold">Garantia nº {i + 1}</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-pm-gold">
+                  Garantia nº {i + 1}
+                </p>
                 <h3 className="mt-3 font-display text-xl">{g.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-pm-muted">{g.text}</p>
               </div>
@@ -548,12 +535,15 @@ export default function Page() {
               <p className={eyebrow}>Clube de membros</p>
               <h2 className="mt-3 font-display text-4xl">Entre para a família</h2>
               <p className="mt-3 text-sm text-pm-muted">
-                Receba primeiro as pré-vendas, os alertas de preço e as ofertas que só a família conhece.
+                Receba primeiro as pré-vendas, os alertas de preço e as ofertas que só a família
+                conhece.
               </p>
             </div>
             <form onSubmit={(e) => e.preventDefault()}>
               <label className="block">
-                <span className="mb-2 block text-[10px] uppercase tracking-[0.2em] text-pm-muted">Seu e-mail</span>
+                <span className="mb-2 block text-[10px] uppercase tracking-[0.2em] text-pm-muted">
+                  Seu e-mail
+                </span>
                 <input type="email" required placeholder="voce@exemplo.com" className={input} />
               </label>
               <button type="submit" className={btnRed + ' mt-2 w-full'}>
@@ -564,43 +554,6 @@ export default function Page() {
           </div>
         </div>
       </section>
-
-      <footer id="contato" className="border-t border-pm-line bg-black/40">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 md:px-8 lg:grid-cols-4">
-          <div>
-            <p className="font-display text-lg font-bold tracking-wide">PODEROSO MESÃO</p>
-            <p className="mt-3 text-sm text-pm-muted">
-              Loja virtual de card games. Avulsas, lacrados e acessórios, com cada cliente tratado como família.
-            </p>
-          </div>
-          <div className="space-y-2 text-sm">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-pm-gold">A loja</p>
-            {['Cartas avulsas', 'Lacrados', 'Pré-vendas', 'Acessórios', 'Compra por lista'].map((l) => (
-              <a key={l} href="#estoque" className="block hover:text-pm-gold">
-                {l}
-              </a>
-            ))}
-          </div>
-          <div className="space-y-2 text-sm">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-pm-gold">Ajuda</p>
-            {['Prazos e frete', 'Formas de pagamento', 'Trocas e devoluções', 'Guia de condição das cartas'].map((l) => (
-              <a key={l} href="#contato" className="block hover:text-pm-gold">
-                {l}
-              </a>
-            ))}
-          </div>
-          <div className="space-y-2 text-sm">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-pm-gold">Fale com o consigliere</p>
-            <p>WhatsApp [TELEFONE]</p>
-            <p>Instagram [@USUÁRIO]</p>
-            <p>[E-MAIL]</p>
-          </div>
-        </div>
-        <div className="mx-auto flex max-w-6xl flex-wrap justify-between gap-2 border-t border-pm-line px-4 py-6 text-[11px] text-pm-muted md:px-8">
-          <p>© [ANO] Poderoso Mesão · CNPJ [CNPJ]. Todos os direitos reservados.</p>
-          <p className="font-display italic">Não é pessoal. São só negócios.</p>
-        </div>
-      </footer>
-    </div>
+    </StoreLayout>
   )
 }

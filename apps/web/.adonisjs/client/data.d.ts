@@ -7,6 +7,7 @@
 import type { InferData, InferVariants } from '@adonisjs/core/types/transformers'
 import type { InferSharedProps, InferFlashData } from '@adonisjs/inertia/types'
 import type NotificationsNotificationTransformer from '#app/notifications/transformers/notification_transformer'
+import type ShopProductTransformer from '#app/shop/transformers/product_transformer'
 import type UsersTokenTransformer from '#app/users/transformers/token_transformer'
 import type UsersUserTransformer from '#app/users/transformers/user_transformer'
 import type InertiaMiddleware from '#core/middleware/inertia_middleware'
@@ -16,6 +17,12 @@ export namespace Data {
     export type Notification = InferData<NotificationsNotificationTransformer>
     export namespace Notification {
       export type Variants = InferVariants<NotificationsNotificationTransformer>
+    }
+  }
+  export namespace Shop {
+    export type Product = InferData<ShopProductTransformer>
+    export namespace Product {
+      export type Variants = InferVariants<ShopProductTransformer>
     }
   }
   export namespace Users {

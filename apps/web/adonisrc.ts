@@ -83,9 +83,6 @@ export default defineConfig({
   preloads: [
     () => import('#start/kernel'),
 
-    //marketing
-    () => import('#marketing/routes'),
-
     //auth
     () => import('#auth/start/view'),
     () => import('#auth/start/events'),
@@ -101,6 +98,9 @@ export default defineConfig({
 
     //notifications
     () => import('#notifications/routes'),
+
+    //shop
+    () => import('#shop/routes'),
   ],
 
   /*

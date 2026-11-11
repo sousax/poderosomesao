@@ -32,7 +32,7 @@ Before reporting completion:
 
 ## Architecture — module per bounded context
 
-Every bounded context lives at `app/<mod>/` as a self-contained module. A module owns the ubiquitous language of one context and may hold multiple aggregates inside — modules are **not** 1:1 with aggregates. Existing modules: `auth`, `users`, `marketing`, `analytics`, `common`, `core`, `notifications`. Each module dir is aliased as `#<mod>/*` in `apps/web/package.json` → `"imports"` — see the `module-scaffolding` skill to add one.
+Every bounded context lives at `app/<mod>/` as a self-contained module. A module owns the ubiquitous language of one context and may hold multiple aggregates inside — modules are **not** 1:1 with aggregates. Existing modules: `auth`, `users`, `shop`, `analytics`, `common`, `core`, `notifications`. Each module dir is aliased as `#<mod>/*` in `apps/web/package.json` → `"imports"` — see the `module-scaffolding` skill to add one.
 
 ```
 app/<module>/
@@ -57,7 +57,7 @@ app/<module>/
 
 ### Dependency direction
 
-Feature modules (`auth`, `users`, `marketing`, `analytics`, `notifications`) depend only on `common`, `core`, and themselves. The one sanctioned exception is `auth → users` — auth is behavior over the identity aggregate that `users` owns. `core` and `common` may import `User`: that's the assumed cost of typed shared props. Don't introduce a new feature→feature dependency without adding it here first.
+Feature modules (`auth`, `users`, `shop`, `analytics`, `notifications`) depend only on `common`, `core`, and themselves. The one sanctioned exception is `auth → users` — auth is behavior over the identity aggregate that `users` owns. `core` and `common` may import `User`: that's the assumed cost of typed shared props. Don't introduce a new feature→feature dependency without adding it here first.
 
 ### Naming is wiring
 
